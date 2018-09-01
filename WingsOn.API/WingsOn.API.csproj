@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\WingsOn.BL.DI\WingsOn.BL.DI.csproj" />
+    <ProjectReference Include="..\WingsOn.BL\WingsOn.BL.csproj" />
+    <ProjectReference Include="..\WingsOn.Dal.DI\WingsOn.Dal.DI.csproj" />
+    <ProjectReference Include="..\WingsOn.Dal\WingsOn.Dal.csproj" />
+    <ProjectReference Include="..\WingsOn.Domain\WingsOn.Domain.csproj" />
+  </ItemGroup>
+
+</Project>
