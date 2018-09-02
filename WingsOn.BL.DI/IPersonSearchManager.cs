@@ -7,6 +7,8 @@ namespace WingsOn.BL.DI
     {
         Person GetById(int id);
 
+        IEnumerable<Person> GetAll();
+
         IEnumerable<Person> GetAllByFlightNumber(string flightNumber);
 
         IEnumerable<Person> GetAllByGender(GenderType gender);

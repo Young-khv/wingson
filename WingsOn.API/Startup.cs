@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using WingsOn.API.ServiceCollectionExtensions;
 
 namespace WingsOn.API
 {
@@ -18,8 +19,15 @@ namespace WingsOn.API
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+            services
+                .AddMvc()
+                .AddControllersAsServices()
+                .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
+            services.AddBLServices();
+            services.AddDalServices();
+
+            services.AddSwagger();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -31,6 +39,11 @@ namespace WingsOn.API
             }
 
             app.UseMvc();
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "WingsOn API V1");
+            });
         }
     }
 }

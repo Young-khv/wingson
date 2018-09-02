@@ -34,6 +34,12 @@ namespace WingsOn.BL
             return person;
         }
 
+        public IEnumerable<Person> GetAll()
+        {
+            throw new System.Exception("alalalala");
+            return _personRepository.GetAll();
+        }
+
         public IEnumerable<Person> GetAllByFlightNumber(string flightNumber)
         {
             var bookingsForFlight = _bookingRepository

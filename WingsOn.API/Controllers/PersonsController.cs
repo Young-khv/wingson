@@ -1,8 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
+using WingsOn.BL;
+using WingsOn.BL.DI;
 using WingsOn.Domain;
 
 namespace WingsOn.API.Controllers
@@ -11,16 +10,46 @@ namespace WingsOn.API.Controllers
     [ApiController]
     public class PersonsController : ControllerBase
     {
-        [HttpGet]
-        public IEnumerable<Person> Get()
+        private readonly IPersonSearchManager _personSearchManager;
+
+        public PersonsController(IPersonSearchManager personSearchManager)
         {
-            return new[] { new Person() };
+            _personSearchManager = personSearchManager;
+        }
+
+        [HttpGet]
+        public ActionResult<IEnumerable<Person>> GetAll()
+        {
+            return new ActionResult<IEnumerable<Person>>(_personSearchManager.GetAll());
         }
 
         [HttpGet("{id}")]
-        public Person Get(int id)
+        public ActionResult<Person> Get(int id)
         {
-            return new Person();
+            Person person;
+
+            try
+            {
+                person = _personSearchManager.GetById(id);
+            }
+            catch (PersonNotFoundException)
+            {
+                return NotFound();
+            }
+
+            return person;
+        }
+
+        [HttpGet("flight/{flightNumber}")]
+        public ActionResult<IEnumerable<Person>> GetByFlight(string flightNumber)
+        {
+            return new ActionResult<IEnumerable<Person>>(_personSearchManager.GetAllByFlightNumber(flightNumber));
+        }
+
+        [HttpGet("male")]
+        public ActionResult<IEnumerable<Person>> GetMalePersons()
+        {
+            return new ActionResult<IEnumerable<Person>>(_personSearchManager.GetAllByGender(GenderType.Male));
         }
     }
 }
