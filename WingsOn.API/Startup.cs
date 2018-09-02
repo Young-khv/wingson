@@ -3,6 +3,9 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Serialization;
+using WingsOn.API.Middlwares;
 using WingsOn.API.ServiceCollectionExtensions;
 
 namespace WingsOn.API
@@ -21,6 +24,11 @@ namespace WingsOn.API
         {
             services
                 .AddMvc()
+                .AddJsonOptions(options => 
+                    {
+                        options.SerializerSettings.ContractResolver = new DefaultContractResolver();
+                        options.SerializerSettings.DateTimeZoneHandling = DateTimeZoneHandling.Unspecified;
+                    })
                 .AddControllersAsServices()
                 .SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 
@@ -38,6 +46,7 @@ namespace WingsOn.API
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseMiddleware<ErrorHandlingMiddleware>();
             app.UseMvc();
             app.UseSwagger();
             app.UseSwaggerUI(c =>

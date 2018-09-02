@@ -8,6 +8,8 @@ namespace WingsOn.BL
 {
     public class PersonSearchManager : IPersonSearchManager
     {
+        private const string NOT_FOUND_EXCEPTION_PATTERN = "Person with id {0} is not presented in the system";
+
         private readonly IRepository<Person> _personRepository;
         private readonly IRepository<Booking> _bookingRepository;
         private readonly IRepository<Flight> _flightRepository;
@@ -27,7 +29,7 @@ namespace WingsOn.BL
 
             if (person == null)
             {
-                var exMessage = $"Person with id {id} is not presented in the system";
+                var exMessage = string.Format(NOT_FOUND_EXCEPTION_PATTERN, id);
                 throw new PersonNotFoundException(exMessage);
             }
 
@@ -36,7 +38,6 @@ namespace WingsOn.BL
 
         public IEnumerable<Person> GetAll()
         {
-            throw new System.Exception("alalalala");
             return _personRepository.GetAll();
         }
 

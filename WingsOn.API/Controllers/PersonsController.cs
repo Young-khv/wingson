@@ -1,6 +1,5 @@
 ﻿using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc;
-using WingsOn.BL;
 using WingsOn.BL.DI;
 using WingsOn.Domain;
 
@@ -26,18 +25,7 @@ namespace WingsOn.API.Controllers
         [HttpGet("{id}")]
         public ActionResult<Person> Get(int id)
         {
-            Person person;
-
-            try
-            {
-                person = _personSearchManager.GetById(id);
-            }
-            catch (PersonNotFoundException)
-            {
-                return NotFound();
-            }
-
-            return person;
+            return _personSearchManager.GetById(id);
         }
 
         [HttpGet("flight/{flightNumber}")]
