@@ -17,27 +17,21 @@ namespace WingsOn.API.Controllers
         }
 
         [HttpGet]
-        public ActionResult<IEnumerable<Person>> GetAll()
+        public IEnumerable<Person> GetAll()
         {
-            return new ActionResult<IEnumerable<Person>>(_personSearchManager.GetAll());
+            return _personSearchManager.GetAll();
         }
 
         [HttpGet("{id}")]
-        public ActionResult<Person> Get(int id)
+        public Person Get(int id)
         {
             return _personSearchManager.GetById(id);
         }
 
-        [HttpGet("flight/{flightNumber}")]
-        public ActionResult<IEnumerable<Person>> GetByFlight(string flightNumber)
-        {
-            return new ActionResult<IEnumerable<Person>>(_personSearchManager.GetAllByFlightNumber(flightNumber));
-        }
-
         [HttpGet("male")]
-        public ActionResult<IEnumerable<Person>> GetMalePersons()
+        public IEnumerable<Person> GetMalePersons()
         {
-            return new ActionResult<IEnumerable<Person>>(_personSearchManager.GetAllByGender(GenderType.Male));
+            return _personSearchManager.GetAllByGender(GenderType.Male);
         }
     }
 }

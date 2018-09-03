@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using WingsOn.BL.DI;
+using WingsOn.BL.Exceptions;
 using WingsOn.Dal.DI;
 using WingsOn.Domain;
 
@@ -11,16 +12,10 @@ namespace WingsOn.BL
         private const string NOT_FOUND_EXCEPTION_PATTERN = "Person with id {0} is not presented in the system";
 
         private readonly IRepository<Person> _personRepository;
-        private readonly IRepository<Booking> _bookingRepository;
-        private readonly IRepository<Flight> _flightRepository;
 
-        public PersonSearchManager(IRepository<Person> personRepository,
-                                   IRepository<Booking> bookingRepository,
-                                   IRepository<Flight> flightRepository)
+        public PersonSearchManager(IRepository<Person> personRepository)
         {
             _personRepository = personRepository;
-            _bookingRepository = bookingRepository;
-            _flightRepository = flightRepository;
         }
 
         public Person GetById(int id)
@@ -30,7 +25,7 @@ namespace WingsOn.BL
             if (person == null)
             {
                 var exMessage = string.Format(NOT_FOUND_EXCEPTION_PATTERN, id);
-                throw new PersonNotFoundException(exMessage);
+                throw new DomainObjectNotFoundException(exMessage);
             }
 
             return person;
@@ -39,17 +34,6 @@ namespace WingsOn.BL
         public IEnumerable<Person> GetAll()
         {
             return _personRepository.GetAll();
-        }
-
-        public IEnumerable<Person> GetAllByFlightNumber(string flightNumber)
-        {
-            var bookingsForFlight = _bookingRepository
-                .GetAll()
-                .Where(booking => booking.Flight.Number == flightNumber);
-
-            return bookingsForFlight
-                .SelectMany(booking => booking.Passengers)
-                .Distinct();
         }
 
         public IEnumerable<Person> GetAllByGender(GenderType gender)

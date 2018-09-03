@@ -1,11 +1,10 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using Newtonsoft.Json;
 using System;
 using System.Net;
 using System.Threading.Tasks;
 using WingsOn.API.InfoModels;
-using WingsOn.BL;
+using WingsOn.BL.Exceptions;
 
 namespace WingsOn.API.Middlwares
 {
@@ -39,7 +38,7 @@ namespace WingsOn.API.Middlwares
             var code = HttpStatusCode.InternalServerError; // 500 if unexpected
             string result = "";
 
-            if (exception is PersonNotFoundException)
+            if (exception is DomainObjectNotFoundException)
             {
                 _logger.LogWarning(exception, exception.Message, exception?.InnerException?.Message);
                 code = HttpStatusCode.NotFound;

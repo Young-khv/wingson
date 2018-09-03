@@ -41,7 +41,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Exceptions\PersonNotFoundException.cs" />
+    <Compile Include="BookingSearchManager.cs" />
+    <Compile Include="Exceptions\DomainObjectNotFoundException.cs" />
     <Compile Include="PersonSearchManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

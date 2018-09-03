@@ -13,13 +13,13 @@ namespace WingsOn.API.ServiceCollectionExtensions
         public static void AddBLServices(this IServiceCollection services)
         {
             services.AddScoped<IPersonSearchManager, PersonSearchManager>();
+            services.AddScoped<IBookingSearchManager, BookingSearchManager>();
         }
 
         public static void AddDalServices(this IServiceCollection services)
         {
             services.AddScoped<IRepository<Person>, PersonRepository>();
             services.AddScoped<IRepository<Booking>, BookingRepository>();
-            services.AddScoped<IRepository<Flight>, FlightRepository>();
         }
 
         public static void AddSwagger(this IServiceCollection services)

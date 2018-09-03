@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Serialization;
+using System.Linq;
 using WingsOn.API.Middlwares;
 using WingsOn.API.ServiceCollectionExtensions;
 
@@ -53,7 +54,14 @@ namespace WingsOn.API
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
-            app.UseSwagger();
+            app.UseSwagger(o =>
+            {
+                o.PreSerializeFilters.Add((document, request) =>
+                {
+                    document.Paths = document.Paths.ToDictionary(p => p.Key.ToLowerInvariant(), p => p.Value);
+                });
+            });
+
             app.UseSwaggerUI(c =>
             {
                 c.SwaggerEndpoint("/swagger/v1/swagger.json", "WingsOn API V1");
