@@ -23,15 +23,43 @@ namespace WingsOn.Tests
 
             personsRepositoryMock.Setup(m => m.GetAll()).Returns(GeneratePersons());
 
+            personsRepositoryMock.Setup(m => m.Get(It.IsAny<int>()))
+                .Returns((int id) => GeneratePersons().FirstOrDefault(person => person.Id == id));
+
             _personSearchManager = new PersonSearchManager(personsRepositoryMock.Object);
         }
 
         [Test]
-        public void Test_should_throw_PersonNotFoundException_for_id_not_in_the_system()
+        public void Test_should_throw_DomainObjectNotFoundException_for_id_not_in_the_system()
         {
             var notPresentedId = -1;
 
             Assert.Throws<DomainObjectNotFoundException>(() => _personSearchManager.GetById(notPresentedId));
+        }
+
+        [Test]
+        public void Test_should_return_single_person_with_specified_id()
+        {
+            var id = 91;
+
+            var person = _personSearchManager.GetById(id);
+
+            Assert.NotNull(person);
+            Assert.AreEqual(id, person.Id);
+        }
+
+        [Test]
+        public void Test_should_return_only_males()
+        {
+            var malesCount = GeneratePersons()
+                .Count(person => person.Gender == GenderType.Male);
+
+            var males = _personSearchManager.GetAllByGender(GenderType.Male).ToArray();
+
+            Assert.NotNull(males);
+            Assert.IsNotEmpty(males);
+            Assert.AreEqual(malesCount, males.Length);
+            Assert.True(males.All(person => person.Gender == GenderType.Male));
         }
 
 #region Repositories results generation
@@ -83,70 +111,6 @@ namespace WingsOn.Tests
                     Email = "et@dictumeleifendnunc.org",
                     Gender = GenderType.Female,
                     Name = "Zenia Stout"
-                }
-            };
-        }
-
-        private IEnumerable<Booking> GenerateBookings()
-        {
-            var persons = GeneratePersons();
-            var flights = GenerateFlights();
-            return new[]
-            {
-                new Booking
-                {
-                    Id = 55,
-                    Number = "WO-291470",
-                    Customer = persons.Single(p => p.Name == "Branden Johnston"),
-                    DateBooking = DateTime.Parse("03/03/2006 14:30", _cultureInfo),
-                    Flight = flights.Single(f => f.Number == "BB768"),
-                    Passengers = new []
-                    {
-                        persons.Single(p => p.Name == "Branden Johnston")
-                    }
-                },
-                new Booking
-                {
-                    Id = 83,
-                    Number = "WO-151277",
-                    Customer = persons.Single(p => p.Name == "Debra Lang"),
-                    DateBooking = DateTime.Parse("12/02/2000 12:55", _cultureInfo),
-                    Flight = flights.Single(f => f.Number == "PZ696"),
-                    Passengers = new []
-                    {
-                        persons.Single(p => p.Name == "Claire Stephens"),
-                        persons.Single(p => p.Name == "Kendall Velazquez"),
-                        persons.Single(p => p.Name == "Zenia Stout")
-                    }
-                }
-            };
-        }
-
-        private IEnumerable<Flight> GenerateFlights()
-        {
-            return new[]
-            {
-                new Flight
-                {
-                    Id = 81,
-                    Number = "PZ696",
-                    DepartureAirport = new Airport(),
-                    DepartureDate = DateTime.Parse("20/02/2000 17:50", _cultureInfo),
-                    ArrivalAirport =  new Airport(),
-                    ArrivalDate = DateTime.Parse("20/02/2000 19:00", _cultureInfo),
-                    Carrier = new Airline(),
-                    Price = 95.2m
-                },
-                new Flight
-                {
-                    Id = 21,
-                    Number = "BB768",
-                    ArrivalAirport = new Airport(),
-                    ArrivalDate = DateTime.Parse("14/11/2006 21:00", _cultureInfo),
-                    DepartureAirport =  new Airport(),
-                    DepartureDate = DateTime.Parse("15/11/2006 01:30", _cultureInfo),
-                    Carrier = new Airline(),
-                    Price = 416.17m
                 }
             };
         }
